@@ -6,6 +6,13 @@ def pdf_to_text(file_path):
     try:
         with open(file_path, "rb") as file:
             reader = PyPDF2.PdfReader(file)
+            if reader.is_encrypted:
+                try:
+                    reader.decrypt("")
+                except Exception as e:
+                    print(f"Failed to decrypt the PDF: {e}")
+                    return text
+
             for page_num in range(len(reader.pages)):
                 page = reader.pages[page_num]
                 text += page.extract_text() or ""
